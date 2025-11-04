@@ -1,0 +1,15 @@
+{
+  "name": "@personal-vpn/shared",
+  "version": "1.0.0",
+  "description": "Shared types and utilities for Personal VPN",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf node_modules"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.2"
+  }
+}

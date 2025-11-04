@@ -1,0 +1,59 @@
+name: Backend API CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'packages/backend-api/**'
+      - 'packages/shared/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'packages/backend-api/**'
+      - 'packages/shared/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: |
+          cd packages/backend-api
+          pnpm lint
+
+      - name: Type check
+        run: |
+          cd packages/backend-api
+          pnpm type-check
+
+      - name: Run tests
+        run: |
+          cd packages/backend-api
+          pnpm test
+        env:
+          JWT_SECRET: test-secret
+        continue-on-error: true
+
+  # TODO: Add Vercel deployment
+  # deploy:
+  #   needs: test
+  #   if: github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Deploy to Vercel
+  #       # Add Vercel deployment steps

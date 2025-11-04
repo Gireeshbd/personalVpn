@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Personal VPN",
+  "version": "1.0.0",
+  "description": "Free, privacy-focused VPN for secure browsing",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    },
+    "default_title": "Personal VPN"
+  },
+  "background": {
+    "service_worker": "src/background/index.ts",
+    "type": "module"
+  },
+  "permissions": [
+    "proxy",
+    "storage",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://api.personalvpn.dev/*"
+  ],
+  "options_page": "options.html",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
