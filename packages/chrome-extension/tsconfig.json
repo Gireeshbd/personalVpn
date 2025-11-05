@@ -1,13 +1,15 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["chrome", "jest", "@testing-library/jest-dom"],
+    "types": ["chrome", "jest", "@testing-library/jest-dom", "node"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
       "@shared/*": ["../shared/*"]
-    }
+    },
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src", "manifest.json"],
+  "include": ["src", "manifest.json", "vite.config.ts", "*.config.ts", "*.config.js"],
   "exclude": ["node_modules", "dist"]
 }

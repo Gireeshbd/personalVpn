@@ -9,20 +9,31 @@ import type {
   HealthCheckResponse,
 } from '@shared/types';
 import { StorageManager } from '../lib/storage';
+import { ENV, isDevelopment } from '../lib/config';
 
 export class ApiClient {
   private client: AxiosInstance;
   private storage: StorageManager;
+  private useMockMode: boolean = false;
 
   constructor() {
     this.storage = new StorageManager();
+
+    // Use environment config instead of hardcoded values
+    const baseURL = ENV.API_BASE_URL || API_CONFIG.BASE_URL;
+
     this.client = axios.create({
-      baseURL: API_CONFIG.BASE_URL,
-      timeout: API_CONFIG.TIMEOUT,
+      baseURL,
+      timeout: ENV.API_TIMEOUT || API_CONFIG.TIMEOUT,
       headers: {
         'Content-Type': 'application/json',
       },
     });
+
+    // Enable mock mode if API is not available and in development
+    if (isDevelopment) {
+      this.checkApiAvailability();
+    }
 
     // Add request interceptor to attach auth token
     this.client.interceptors.request.use(
@@ -50,9 +61,73 @@ export class ApiClient {
   }
 
   /**
+   * Check if API is available
+   */
+  private async checkApiAvailability(): Promise<void> {
+    try {
+      await this.client.get(API_ENDPOINTS.HEALTH, { timeout: 2000 });
+      console.log('[API] Backend is available');
+      this.useMockMode = false;
+    } catch (error) {
+      console.warn('[API] Backend not available, using mock mode');
+      this.useMockMode = true;
+    }
+  }
+
+  /**
+   * Get mock servers for development
+   */
+  private getMockServers(): Server[] {
+    return [
+      {
+        id: 'mock-us-1',
+        name: 'US East (Mock)',
+        location: 'New York',
+        countryCode: 'US',
+        protocol: 'socks5',
+        load: 25,
+      },
+      {
+        id: 'mock-eu-1',
+        name: 'EU West (Mock)',
+        location: 'Amsterdam',
+        countryCode: 'NL',
+        protocol: 'socks5',
+        load: 45,
+      },
+      {
+        id: 'mock-asia-1',
+        name: 'Asia Pacific (Mock)',
+        location: 'Singapore',
+        countryCode: 'SG',
+        protocol: 'socks5',
+        load: 60,
+      },
+    ];
+  }
+
+  /**
    * Register or login user
    */
   async register(request: RegisterRequest = {}): Promise<AuthResponse> {
+    // Mock mode for development
+    if (this.useMockMode) {
+      const mockToken = 'mock-jwt-token-' + Date.now();
+      const mockUserId = 'mock-user-' + Date.now();
+      const mockAnonymousId = request.deviceId || 'mock-anon-' + Date.now();
+
+      console.log('[API Mock] User registered:', { mockUserId, mockAnonymousId });
+
+      return {
+        success: true,
+        data: {
+          token: mockToken,
+          userId: mockUserId,
+          anonymousId: mockAnonymousId,
+        },
+      };
+    }
+
     try {
       const response = await this.client.post<AuthResponse>(
         API_ENDPOINTS.AUTH.REGISTER,
@@ -60,6 +135,7 @@ export class ApiClient {
       );
       return response.data;
     } catch (error) {
+      console.error('[API] Register error:', error);
       return this.handleError(error);
     }
   }
@@ -68,13 +144,24 @@ export class ApiClient {
    * Get list of available servers
    */
   async getServers(): Promise<Server[]> {
+    // Mock mode for development
+    if (this.useMockMode) {
+      console.log('[API Mock] Returning mock servers');
+      return this.getMockServers();
+    }
+
     try {
       const response = await this.client.get<ApiResponse<Server[]>>(
         API_ENDPOINTS.SERVERS.LIST
       );
       return response.data.data || [];
     } catch (error) {
-      console.error('Get servers error:', error);
+      console.error('[API] Get servers error:', error);
+      // Fallback to mock servers on error
+      if (isDevelopment) {
+        console.warn('[API] Falling back to mock servers');
+        return this.getMockServers();
+      }
       return [];
     }
   }
@@ -83,6 +170,27 @@ export class ApiClient {
    * Get server configuration
    */
   async getServerConfig(serverId: string): Promise<ServerConfig> {
+    // Mock mode for development
+    if (this.useMockMode) {
+      const mockServers = this.getMockServers();
+      const server = mockServers.find((s) => s.id === serverId);
+
+      if (!server) {
+        throw new Error('Mock server not found');
+      }
+
+      console.log('[API Mock] Returning mock server config:', server.name);
+
+      // Return mock configuration with localhost proxy
+      return {
+        id: server.id,
+        name: server.name,
+        host: '127.0.0.1',
+        port: 8080,
+        protocol: 'http',
+      };
+    }
+
     try {
       const response = await this.client.post<ApiResponse<ServerConfig>>(
         API_ENDPOINTS.SERVERS.CONFIG,
@@ -95,6 +203,7 @@ export class ApiClient {
 
       return response.data.data;
     } catch (error) {
+      console.error('[API] Get server config error:', error);
       throw this.handleError(error);
     }
   }

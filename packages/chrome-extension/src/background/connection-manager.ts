@@ -79,7 +79,13 @@ export class ConnectionManager {
     try {
       console.log('Disconnecting...');
 
-      await this.proxyManager.clearProxy();
+      // Try to clear proxy, but don't fail if it errors
+      try {
+        await this.proxyManager.clearProxy();
+      } catch (proxyError) {
+        console.warn('Failed to clear proxy (may already be cleared):', proxyError);
+      }
+
       this.currentServer = null;
       this.connectionState = 'disconnected';
       this.reconnectAttempts = 0;
@@ -94,7 +100,9 @@ export class ConnectionManager {
       console.log('Disconnected successfully');
     } catch (error) {
       console.error('Disconnect error:', error);
-      throw error;
+      // Still update state even if there was an error
+      this.connectionState = 'disconnected';
+      this.notifyStateChange();
     }
   }
 
