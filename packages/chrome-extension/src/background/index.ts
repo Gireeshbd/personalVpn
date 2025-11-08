@@ -127,7 +127,7 @@ class BackgroundService {
    */
   private async handleMessage(
     message: ExtensionMessage,
-    sender: chrome.runtime.MessageSender,
+    _sender: chrome.runtime.MessageSender,
     sendResponse: (response: MessageResponse) => void
   ) {
     try {

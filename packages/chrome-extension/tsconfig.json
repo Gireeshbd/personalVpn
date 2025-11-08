@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["chrome", "jest", "@testing-library/jest-dom", "node"],
+    "types": ["chrome", "jest", "@testing-library/jest-dom", "node", "vite/client"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],

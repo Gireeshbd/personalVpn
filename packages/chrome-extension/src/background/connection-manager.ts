@@ -1,7 +1,6 @@
 import type {
   ConnectionState,
   ServerConfig,
-  ConnectionStateStorage,
 } from '@shared/types';
 import { BADGE_COLORS, BADGE_TEXT } from '@shared/constants';
 import { ProxyManager } from './proxy-manager';

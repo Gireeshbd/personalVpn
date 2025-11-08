@@ -10,6 +10,7 @@ interface EnvConfig {
 
 function getEnvVar(key: string, defaultValue: string): string {
   // In Vite, env variables are accessed via import.meta.env
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const value = (import.meta.env as any)[`VITE_${key}`];
   return value !== undefined ? value : defaultValue;
 }
