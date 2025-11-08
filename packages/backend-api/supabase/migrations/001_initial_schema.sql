@@ -83,8 +83,84 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+-- Atomic increment server load with capacity check
+CREATE OR REPLACE FUNCTION increment_server_load(server_id UUID)
+RETURNS TABLE(id UUID, name VARCHAR, host VARCHAR, port INTEGER, protocol VARCHAR) AS $$
+BEGIN
+  RETURN QUERY
+  UPDATE vpn_servers
+  SET current_load = current_load + 1
+  WHERE vpn_servers.id = server_id
+    AND is_active = true
+    AND current_load < capacity
+  RETURNING vpn_servers.id, vpn_servers.name, vpn_servers.host, vpn_servers.port, vpn_servers.protocol;
+END;
+$$ language 'plpgsql';
+
+-- Atomic decrement server load
+CREATE OR REPLACE FUNCTION decrement_server_load(server_id UUID)
+RETURNS VOID AS $$
+BEGIN
+  UPDATE vpn_servers
+  SET current_load = GREATEST(0, current_load - 1)
+  WHERE id = server_id;
+END;
+$$ language 'plpgsql';
+
+-- Atomic rate limit check and increment
+CREATE OR REPLACE FUNCTION check_and_increment_rate_limit(
+  p_user_id UUID,
+  p_endpoint VARCHAR,
+  p_max_requests INTEGER,
+  p_window_ms BIGINT
+)
+RETURNS BOOLEAN AS $$
+DECLARE
+  v_record RECORD;
+  v_now TIMESTAMP WITH TIME ZONE := NOW();
+  v_window_age_ms BIGINT;
+BEGIN
+  -- Try to get existing rate limit record
+  SELECT * INTO v_record
+  FROM rate_limits
+  WHERE user_id = p_user_id AND endpoint = p_endpoint
+  FOR UPDATE;
+
+  -- If no record exists, create one
+  IF NOT FOUND THEN
+    INSERT INTO rate_limits (user_id, endpoint, request_count, window_start)
+    VALUES (p_user_id, p_endpoint, 1, v_now);
+    RETURN TRUE;
+  END IF;
+
+  -- Calculate window age in milliseconds
+  v_window_age_ms := EXTRACT(EPOCH FROM (v_now - v_record.window_start)) * 1000;
+
+  -- If window has expired, reset it
+  IF v_window_age_ms > p_window_ms THEN
+    UPDATE rate_limits
+    SET request_count = 1, window_start = v_now
+    WHERE id = v_record.id;
+    RETURN TRUE;
+  END IF;
+
+  -- Check if rate limit exceeded
+  IF v_record.request_count >= p_max_requests THEN
+    RETURN FALSE;
+  END IF;
+
+  -- Increment request count
+  UPDATE rate_limits
+  SET request_count = request_count + 1
+  WHERE id = v_record.id;
+  
+  RETURN TRUE;
+END;
+$$ language 'plpgsql';
+
 -- Triggers
-CREATE TRIGGER IF NOT EXISTS update_vpn_servers_updated_at
+DROP TRIGGER IF EXISTS update_vpn_servers_updated_at ON vpn_servers;
+CREATE TRIGGER update_vpn_servers_updated_at
   BEFORE UPDATE ON vpn_servers
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();

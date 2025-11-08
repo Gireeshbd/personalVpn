@@ -28,41 +28,61 @@ export default async function handler(
     const user = await verifyAuth(req);
     const { serverId } = configSchema.parse(req.body);
 
-    // Get server configuration
-    const { data: server, error } = await supabase
-      .from('vpn_servers')
-      .select('*')
-      .eq('id', serverId)
-      .eq('is_active', true)
-      .single();
+    // Atomically increment server load if below capacity
+    // This uses a raw SQL query to ensure atomicity
+    const { data: updatedServer, error: updateError } = await supabase
+      .rpc('increment_server_load', { server_id: serverId });
 
-    if (error || !server) {
-      return res.status(404).json({
+    if (updateError) {
+      console.error('Failed to increment server load:', updateError);
+      return res.status(500).json({
         success: false,
-        error: 'Server not found',
+        error: 'Failed to connect to server',
       });
     }
 
-    // Check server capacity
-    if (server.current_load >= server.capacity) {
+    if (!updatedServer || updatedServer.length === 0) {
+      // Either server not found or at capacity
+      const { data: server } = await supabase
+        .from('vpn_servers')
+        .select('current_load, capacity')
+        .eq('id', serverId)
+        .eq('is_active', true)
+        .single();
+
+      if (!server) {
+        return res.status(404).json({
+          success: false,
+          error: 'Server not found',
+        });
+      }
+
       return res.status(503).json({
         success: false,
         error: 'Server at capacity',
       });
     }
 
-    // Increment server load
-    await supabase
-      .from('vpn_servers')
-      .update({ current_load: server.current_load + 1 })
-      .eq('id', serverId);
+    const server = updatedServer[0];
 
     // Create connection record
-    await supabase.from('connections').insert({
+    const { error: connectionError } = await supabase.from('connections').insert({
       user_id: user.userId,
       server_id: serverId,
       is_active: true,
     });
+
+    if (connectionError) {
+      // Rollback the load increment
+      await supabase
+        .rpc('decrement_server_load', { server_id: serverId });
+      
+      console.error('Failed to create connection record:', connectionError);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to create connection',
+      });
+    }
 
     res.status(200).json({
       success: true,

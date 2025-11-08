@@ -20,52 +20,27 @@ export async function checkRateLimit(
   const limit = RATE_LIMITS[endpoint];
   if (!limit) return true;
 
-  const { data: rateLimitRecord } = await supabase
-    .from('rate_limits')
-    .select('*')
-    .eq('user_id', userId)
-    .eq('endpoint', endpoint)
-    .single();
+  try {
+    // Use RPC function for atomic rate limit check and increment
+    const { data, error } = await supabase
+      .rpc('check_and_increment_rate_limit', {
+        p_user_id: userId,
+        p_endpoint: endpoint,
+        p_max_requests: limit.requests,
+        p_window_ms: limit.window,
+      });
 
-  const now = new Date();
+    if (error) {
+      console.error('Rate limit check error:', error);
+      // Fail open - allow request if rate limit check fails
+      return true;
+    }
 
-  if (!rateLimitRecord) {
-    // Create new rate limit record
-    await supabase.from('rate_limits').insert({
-      user_id: userId,
-      endpoint,
-      request_count: 1,
-      window_start: now.toISOString(),
-    });
+    // RPC function returns true if request is allowed, false if rate limited
+    return data === true;
+  } catch (error) {
+    console.error('Rate limit error:', error);
+    // Fail open - allow request on error
     return true;
   }
-
-  const windowStart = new Date(rateLimitRecord.window_start);
-  const windowAge = now.getTime() - windowStart.getTime();
-
-  if (windowAge > limit.window) {
-    // Reset window
-    await supabase
-      .from('rate_limits')
-      .update({
-        request_count: 1,
-        window_start: now.toISOString(),
-      })
-      .eq('id', rateLimitRecord.id);
-    return true;
-  }
-
-  if (rateLimitRecord.request_count >= limit.requests) {
-    return false; // Rate limit exceeded
-  }
-
-  // Increment count
-  await supabase
-    .from('rate_limits')
-    .update({
-      request_count: rateLimitRecord.request_count + 1,
-    })
-    .eq('id', rateLimitRecord.id);
-
-  return true;
 }

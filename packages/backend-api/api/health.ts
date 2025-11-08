@@ -16,9 +16,9 @@ export default async function handler(
 
   try {
     // Check database connection
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('vpn_servers')
-      .select('count')
+      .select('id')
       .limit(1);
 
     if (error) throw error;

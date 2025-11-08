@@ -65,6 +65,12 @@ export class ConnectionManager {
       return this.connectionState;
     } catch (error) {
       console.error('Connection error:', error);
+      // Clear proxy on connection failure
+      try {
+        await this.proxyManager.clearProxy();
+      } catch (clearError) {
+        console.error('Failed to clear proxy after connection error:', clearError);
+      }
       this.connectionState = 'error';
       this.notifyStateChange();
       throw error;

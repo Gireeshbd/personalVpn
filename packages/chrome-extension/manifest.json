@@ -31,6 +31,6 @@
   ],
   "options_page": "options.html",
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "extension_pages": "script-src 'self'; style-src 'self'; connect-src https://api.personalvpn.dev; object-src 'self'"
   }
 }

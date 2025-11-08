@@ -26,7 +26,7 @@ Thank you for your interest in contributing to Personal VPN! This document provi
 
 ## Project Structure
 
-```
+```text
 personalVpn/
 ├── packages/
 │   ├── chrome-extension/    # Chrome extension code
