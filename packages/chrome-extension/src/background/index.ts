@@ -4,6 +4,7 @@ import { StorageManager } from '../lib/storage';
 import { ConnectionManager } from './connection-manager';
 import type { ExtensionMessage, MessageResponse } from '@shared/types';
 import { CONNECTION_CONFIG } from '@shared/constants';
+import { logger } from '../lib/logger';
 
 /**
  * Background Service Worker
@@ -35,7 +36,7 @@ class BackgroundService {
   private async initialize() {
     if (this.isInitialized) return;
 
-    console.log('🚀 Personal VPN Background Service starting...');
+    logger.log('🚀 Personal VPN Background Service starting...');
 
     try {
       // Ensure user is registered
@@ -44,11 +45,11 @@ class BackgroundService {
       // Restore connection state on startup
       const state = await this.storage.getConnectionState();
       if (state.isConnected && state.serverId) {
-        console.log('Restoring previous connection...');
+        logger.log('Restoring previous connection...');
         try {
           await this.connectionManager.connect(state.serverId);
         } catch (error) {
-          console.error('Failed to restore connection:', error);
+          logger.error('Failed to restore connection:', error);
           await this.connectionManager.disconnect();
         }
       }
@@ -58,9 +59,9 @@ class BackgroundService {
       this.setupAlarms();
 
       this.isInitialized = true;
-      console.log('✅ Background service initialized');
+      logger.log('✅ Background service initialized');
     } catch (error) {
-      console.error('❌ Background service initialization failed:', error);
+      logger.error('❌ Background service initialization failed:', error);
     }
   }
 
@@ -68,10 +69,10 @@ class BackgroundService {
    * Ensure user is registered with the API
    */
   private async ensureUserRegistered(): Promise<void> {
-    let token = await this.storage.getAuthToken();
+    const token = await this.storage.getAuthToken();
 
     if (!token) {
-      console.log('No auth token found, registering user...');
+      logger.log('No auth token found, registering user...');
 
       // Get or generate anonymous ID
       let anonymousId = await this.storage.getAnonymousId();
@@ -87,12 +88,12 @@ class BackgroundService {
         await this.storage.setAuthToken(response.data.token);
         await this.storage.setUserId(response.data.userId);
         await this.storage.setAnonymousId(response.data.anonymousId);
-        console.log('✅ User registered successfully');
+        logger.log('✅ User registered successfully');
       } else {
         throw new Error('Failed to register user');
       }
     } else {
-      console.log('✅ User already registered');
+      logger.log('✅ User already registered');
     }
   }
 
@@ -118,7 +119,7 @@ class BackgroundService {
       }
     );
 
-    console.log('✅ Message listeners setup');
+    logger.log('✅ Message listeners setup');
   }
 
   /**
@@ -130,7 +131,7 @@ class BackgroundService {
     sendResponse: (response: MessageResponse) => void
   ) {
     try {
-      console.log('📨 Received message:', message.type);
+      logger.log('📨 Received message:', message.type);
 
       switch (message.type) {
         case 'CONNECT':
@@ -163,7 +164,7 @@ class BackgroundService {
           sendResponse({ success: false, error: 'Unknown message type' });
       }
     } catch (error) {
-      console.error('Message handling error:', error);
+      logger.error('Message handling error:', error);
       sendResponse({
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -186,10 +187,10 @@ class BackgroundService {
       }
     });
 
-    console.log('✅ Alarms setup');
+    logger.log('✅ Alarms setup');
   }
 }
 
 // Initialize background service
-console.log('🔧 Installing Personal VPN Background Service...');
+logger.log('🔧 Installing Personal VPN Background Service...');
 new BackgroundService();

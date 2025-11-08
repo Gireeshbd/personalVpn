@@ -10,6 +10,7 @@ import type {
 } from '@shared/types';
 import { StorageManager } from '../lib/storage';
 import { ENV, isDevelopment } from '../lib/config';
+import { apiLogger } from '../lib/logger';
 
 export class ApiClient {
   private client: AxiosInstance;
@@ -66,10 +67,10 @@ export class ApiClient {
   private async checkApiAvailability(): Promise<void> {
     try {
       await this.client.get(API_ENDPOINTS.HEALTH, { timeout: 2000 });
-      console.log('[API] Backend is available');
+      apiLogger.log('Backend is available');
       this.useMockMode = false;
     } catch (error) {
-      console.warn('[API] Backend not available, using mock mode');
+      apiLogger.warn('Backend not available, using mock mode');
       this.useMockMode = true;
     }
   }
@@ -116,7 +117,7 @@ export class ApiClient {
       const mockUserId = 'mock-user-' + Date.now();
       const mockAnonymousId = request.deviceId || 'mock-anon-' + Date.now();
 
-      console.log('[API Mock] User registered:', { mockUserId, mockAnonymousId });
+      apiLogger.log('Mock: User registered:', { mockUserId, mockAnonymousId });
 
       return {
         success: true,
@@ -135,7 +136,7 @@ export class ApiClient {
       );
       return response.data;
     } catch (error) {
-      console.error('[API] Register error:', error);
+      apiLogger.error('Register error:', error);
       return this.handleError(error);
     }
   }
@@ -146,7 +147,7 @@ export class ApiClient {
   async getServers(): Promise<Server[]> {
     // Mock mode for development
     if (this.useMockMode) {
-      console.log('[API Mock] Returning mock servers');
+      apiLogger.log('Mock: Returning mock servers');
       return this.getMockServers();
     }
 
@@ -156,10 +157,10 @@ export class ApiClient {
       );
       return response.data.data || [];
     } catch (error) {
-      console.error('[API] Get servers error:', error);
+      apiLogger.error('Get servers error:', error);
       // Fallback to mock servers on error
       if (isDevelopment) {
-        console.warn('[API] Falling back to mock servers');
+        apiLogger.warn('Falling back to mock servers');
         return this.getMockServers();
       }
       return [];
@@ -179,7 +180,7 @@ export class ApiClient {
         throw new Error('Mock server not found');
       }
 
-      console.log('[API Mock] Returning mock server config:', server.name);
+      apiLogger.log('Mock: Returning mock server config:', server.name);
 
       // Return mock configuration with localhost proxy
       return {
@@ -203,8 +204,9 @@ export class ApiClient {
 
       return response.data.data;
     } catch (error) {
-      console.error('[API] Get server config error:', error);
-      throw this.handleError(error);
+      apiLogger.error('Get server config error:', error);
+      const errorResponse = this.handleError(error);
+      throw new Error(errorResponse.error);
     }
   }
 
@@ -220,7 +222,7 @@ export class ApiClient {
       });
     } catch (error) {
       // Don't throw on analytics errors
-      console.error('Track connection error:', error);
+      apiLogger.error('Track connection error:', error);
     }
   }
 
@@ -244,7 +246,7 @@ export class ApiClient {
     }
   }
 
-  private handleError(error: unknown): any {
+  private handleError(error: unknown): { success: false; error: string } {
     if (axios.isAxiosError(error)) {
       const message = error.response?.data?.error || error.message;
       return {

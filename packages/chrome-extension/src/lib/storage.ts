@@ -1,22 +1,25 @@
 import { STORAGE_KEYS } from '@shared/constants';
 import type { ConnectionStateStorage } from '@shared/types';
+import { storageLogger } from './logger';
+
+type StorageValue = string | number | boolean | object | null;
 
 export class StorageManager {
-  async get<T>(key: string): Promise<T | null> {
+  async get<T = StorageValue>(key: string): Promise<T | null> {
     try {
       const result = await chrome.storage.local.get(key);
-      return result[key] || null;
+      return (result[key] as T) || null;
     } catch (error) {
-      console.error('Storage get error:', error);
+      storageLogger.error('Get error:', error);
       return null;
     }
   }
 
-  async set(key: string, value: any): Promise<void> {
+  async set(key: string, value: StorageValue): Promise<void> {
     try {
       await chrome.storage.local.set({ [key]: value });
     } catch (error) {
-      console.error('Storage set error:', error);
+      storageLogger.error('Set error:', error);
       throw error;
     }
   }
@@ -25,7 +28,7 @@ export class StorageManager {
     try {
       await chrome.storage.local.remove(key);
     } catch (error) {
-      console.error('Storage remove error:', error);
+      storageLogger.error('Remove error:', error);
       throw error;
     }
   }
@@ -34,7 +37,7 @@ export class StorageManager {
     try {
       await chrome.storage.local.clear();
     } catch (error) {
-      console.error('Storage clear error:', error);
+      storageLogger.error('Clear error:', error);
       throw error;
     }
   }
