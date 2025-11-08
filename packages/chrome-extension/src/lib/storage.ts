@@ -8,7 +8,8 @@ export class StorageManager {
   async get<T = StorageValue>(key: string): Promise<T | null> {
     try {
       const result = await chrome.storage.local.get(key);
-      return (result[key] as T) || null;
+      // Only return null if the key doesn't exist, preserve falsy values like false, 0, ''
+      return result[key] === undefined ? null : (result[key] as T);
     } catch (error) {
       storageLogger.error('Get error:', error);
       return null;

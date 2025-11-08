@@ -219,7 +219,7 @@ export const App: React.FC = () => {
         {/* Info Section */}
         <div className="mt-4 p-3 bg-blue-100 rounded-lg">
           <p className="text-xs text-blue-800">
-            <strong>🔒 Privacy First:</strong> We don't log your browsing activity.
+            <strong>🔒 Privacy First:</strong> We don&apos;t log your browsing activity.
             Your connection is secure and encrypted.
           </p>
         </div>

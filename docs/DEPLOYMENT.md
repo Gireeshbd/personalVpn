@@ -78,15 +78,29 @@ See `PRODUCTION_PLAN.md` section 6 for detailed infrastructure setup.
 ### Quick Start
 
 1. Setup Oracle Cloud free tier VPS
-2. Install WireGuard:
+2. Install WireGuard manually:
    ```bash
-   ./packages/infrastructure/wireguard/server-setup.sh
+   # SSH into your VPS
+   sudo apt update && sudo apt install -y wireguard
+
+   # Generate server keys
+   wg genkey | tee server_private.key | wg pubkey > server_public.key
+
+   # Configure WireGuard (see PRODUCTION_PLAN.md for full configuration)
+   sudo nano /etc/wireguard/wg0.conf
+
+   # Enable and start WireGuard
+   sudo systemctl enable wg-quick@wg0
+   sudo systemctl start wg-quick@wg0
    ```
 
 3. Configure monitoring:
    ```bash
    # Install Netdata
-   # Install Uptime Kuma
+   bash <(curl -Ss https://my-netdata.io/kickstart.sh)
+
+   # Install Uptime Kuma (optional)
+   # See https://github.com/louislam/uptime-kuma
    ```
 
 ## Post-Deployment

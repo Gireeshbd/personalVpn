@@ -8,6 +8,15 @@ export async function sendMessage<T = any>(
 ): Promise<MessageResponse<T>> {
   try {
     const response = await chrome.runtime.sendMessage(message);
+
+    // Handle case where no listener replies (response is undefined)
+    if (!response) {
+      return {
+        success: false,
+        error: 'No response from background script',
+      };
+    }
+
     return response;
   } catch (error) {
     console.error('Message send error:', error);

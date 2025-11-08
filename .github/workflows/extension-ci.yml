@@ -24,7 +24,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+          cache: 'pnpm'
+          cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -46,7 +47,6 @@ jobs:
         run: |
           cd packages/chrome-extension
           pnpm test
-        continue-on-error: true
 
       - name: Build extension
         run: |

@@ -47,7 +47,6 @@ jobs:
           pnpm test
         env:
           JWT_SECRET: test-secret
-        continue-on-error: true
 
   # TODO: Add Vercel deployment
   # deploy:

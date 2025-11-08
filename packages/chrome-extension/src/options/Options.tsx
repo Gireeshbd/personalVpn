@@ -78,7 +78,7 @@ export const Options: React.FC = () => {
             </p>
             <div className="pt-3 border-t">
               <p className="text-xs text-gray-500">
-                Personal VPN is a free, privacy-focused VPN service. We don't log your
+                Personal VPN is a free, privacy-focused VPN service. We don&apos;t log your
                 browsing activity or sell your data.
               </p>
             </div>
