@@ -13,7 +13,7 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
 };
 
 export async function checkRateLimit(
-  req: VercelRequest,
+  _req: VercelRequest,
   userId: string,
   endpoint: string
 ): Promise<boolean> {

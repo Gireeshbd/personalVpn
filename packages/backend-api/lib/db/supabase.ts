@@ -25,7 +25,7 @@ export interface Database {
           created_at: string;
           last_seen_at: string;
           is_active: boolean;
-          metadata: Record<string, any>;
+          metadata: Record<string, unknown>;
         };
         Insert: {
           id?: string;
@@ -33,7 +33,7 @@ export interface Database {
           created_at?: string;
           last_seen_at?: string;
           is_active?: boolean;
-          metadata?: Record<string, any>;
+          metadata?: Record<string, unknown>;
         };
         Update: {
           id?: string;
@@ -41,7 +41,7 @@ export interface Database {
           created_at?: string;
           last_seen_at?: string;
           is_active?: boolean;
-          metadata?: Record<string, any>;
+          metadata?: Record<string, unknown>;
         };
       };
       vpn_servers: {
@@ -58,7 +58,7 @@ export interface Database {
           is_active: boolean;
           health_status: string;
           last_health_check: string | null;
-          metadata: Record<string, any>;
+          metadata: Record<string, unknown>;
           created_at: string;
           updated_at: string;
         };
@@ -75,7 +75,7 @@ export interface Database {
           is_active?: boolean;
           health_status?: string;
           last_health_check?: string | null;
-          metadata?: Record<string, any>;
+          metadata?: Record<string, unknown>;
           created_at?: string;
           updated_at?: string;
         };
@@ -91,7 +91,7 @@ export interface Database {
           bytes_sent: number;
           bytes_received: number;
           is_active: boolean;
-          metadata: Record<string, any>;
+          metadata: Record<string, unknown>;
         };
       };
       usage_analytics: {

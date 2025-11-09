@@ -29,13 +29,15 @@ export default async function handler(
     const user = await verifyAuth(req);
     const data = trackSchema.parse(req.body);
 
-    console.log('Analytics event:', {
-      userId: user.userId,
-      ...data,
-    });
-
     // In production, you would store this in analytics database
-    // For now, just log it
+    // Event logged for development purposes only
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.log('Analytics event:', {
+        userId: user.userId,
+        ...data,
+      });
+    }
 
     res.status(200).json({
       success: true,
