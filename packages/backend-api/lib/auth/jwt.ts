@@ -1,10 +1,16 @@
 import jwt from 'jsonwebtoken';
 
 // JWT_SECRET is required for security - no fallback in production
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is required');
+// Type assertion is safe here because we validate it exists
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is required');
+  }
+  return secret;
 }
+
+const JWT_SECRET = getJwtSecret();
 const JWT_EXPIRY = process.env.JWT_EXPIRY || '7d';
 
 export interface JWTPayload {

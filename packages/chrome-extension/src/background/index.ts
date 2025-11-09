@@ -134,7 +134,7 @@ class BackgroundService {
       logger.log('📨 Received message:', message.type);
 
       switch (message.type) {
-        case 'CONNECT':
+        case 'CONNECT': {
           if (!message.serverId) {
             sendResponse({ success: false, error: 'Server ID required' });
             return;
@@ -144,21 +144,24 @@ class BackgroundService {
           );
           sendResponse({ success: true, data: connectResult });
           break;
+        }
 
         case 'DISCONNECT':
           await this.connectionManager.disconnect();
           sendResponse({ success: true });
           break;
 
-        case 'GET_STATUS':
+        case 'GET_STATUS': {
           const status = await this.connectionManager.getStatus();
           sendResponse({ success: true, data: status });
           break;
+        }
 
-        case 'GET_SERVERS':
+        case 'GET_SERVERS': {
           const servers = await this.apiClient.getServers();
           sendResponse({ success: true, data: servers });
           break;
+        }
 
         default:
           sendResponse({ success: false, error: 'Unknown message type' });
