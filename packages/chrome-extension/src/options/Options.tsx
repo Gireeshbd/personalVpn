@@ -26,15 +26,14 @@ export const Options: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <label className="font-medium text-gray-700">Auto-connect on startup</label>
+                <label className="font-medium text-gray-700">
+                  Auto-connect on startup
+                </label>
                 <p className="text-sm text-gray-500">
                   Automatically connect to last used server when browser starts
                 </p>
               </div>
-              <input
-                type="checkbox"
-                className="w-4 h-4 text-blue-600 rounded"
-              />
+              <input type="checkbox" className="w-4 h-4 text-blue-600 rounded" />
             </div>
 
             <div className="flex items-center justify-between">
@@ -78,8 +77,8 @@ export const Options: React.FC = () => {
             </p>
             <div className="pt-3 border-t">
               <p className="text-xs text-gray-500">
-                Personal VPN is a free, privacy-focused VPN service. We don&apos;t log your
-                browsing activity or sell your data.
+                Personal VPN is a free, privacy-focused VPN service. We don&apos;t log
+                your browsing activity or sell your data.
               </p>
             </div>
           </div>

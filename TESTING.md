@@ -187,6 +187,7 @@ The extension will now use the real backend API instead of mock mode.
 ### Issue: Extension not loading
 
 **Solution:**
+
 - Check that you selected the `dist/` folder, not the `src/` folder
 - Make sure the build completed successfully (check for errors)
 - Try removing and re-adding the extension
@@ -194,6 +195,7 @@ The extension will now use the real backend API instead of mock mode.
 ### Issue: Changes not appearing
 
 **Solution:**
+
 - Click the refresh icon on the extension card in `chrome://extensions/`
 - For service worker changes, you may need to reload Chrome
 - Check if build command is actually running
@@ -201,6 +203,7 @@ The extension will now use the real backend API instead of mock mode.
 ### Issue: Mock mode not working
 
 **Solution:**
+
 - Check console for error messages
 - Make sure `.env.local` has `VITE_ENVIRONMENT=development`
 - Try rebuilding: `pnpm clean && pnpm build`
@@ -208,6 +211,7 @@ The extension will now use the real backend API instead of mock mode.
 ### Issue: Proxy not working
 
 **Solution:**
+
 - Mock mode sets proxy to `localhost:8080` which won't work without a proxy server
 - This is expected in mock mode - it's for testing UI, not actual proxying
 - For real proxying, you need to setup VPN servers or use the backend API
@@ -215,6 +219,7 @@ The extension will now use the real backend API instead of mock mode.
 ### Issue: TypeScript errors during build
 
 **Solution:**
+
 ```bash
 # Check TypeScript
 pnpm type-check
@@ -226,6 +231,7 @@ pnpm type-check
 ### Issue: Build errors about missing modules
 
 **Solution:**
+
 ```bash
 # Clean and reinstall
 pnpm clean

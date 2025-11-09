@@ -139,9 +139,7 @@ class BackgroundService {
             sendResponse({ success: false, error: 'Server ID required' });
             return;
           }
-          const connectResult = await this.connectionManager.connect(
-            message.serverId
-          );
+          const connectResult = await this.connectionManager.connect(message.serverId);
           sendResponse({ success: true, data: connectResult });
           break;
         }

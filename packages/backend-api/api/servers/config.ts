@@ -7,10 +7,7 @@ const configSchema = z.object({
   serverId: z.string().uuid(),
 });
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -30,8 +27,10 @@ export default async function handler(
 
     // Atomically increment server load if below capacity
     // This uses a raw SQL query to ensure atomicity
-    const { data: updatedServer, error: updateError } = await supabase
-      .rpc('increment_server_load', { server_id: serverId });
+    const { data: updatedServer, error: updateError } = await supabase.rpc(
+      'increment_server_load',
+      { server_id: serverId }
+    );
 
     if (updateError) {
       console.error('Failed to increment server load:', updateError);
@@ -74,9 +73,8 @@ export default async function handler(
 
     if (connectionError) {
       // Rollback the load increment
-      await supabase
-        .rpc('decrement_server_load', { server_id: serverId });
-      
+      await supabase.rpc('decrement_server_load', { server_id: serverId });
+
       console.error('Failed to create connection record:', connectionError);
       return res.status(500).json({
         success: false,

@@ -132,11 +132,11 @@ export const App: React.FC = () => {
           <Shield className="w-6 h-6" />
           <h1 className="text-xl font-bold">Personal VPN</h1>
         </div>
-        <div className={`flex items-center justify-center gap-2 ${getStatusColor()} bg-white rounded-full px-4 py-2`}>
+        <div
+          className={`flex items-center justify-center gap-2 ${getStatusColor()} bg-white rounded-full px-4 py-2`}
+        >
           {getStatusIcon()}
-          <span className="font-semibold text-sm uppercase">
-            {connectionState}
-          </span>
+          <span className="font-semibold text-sm uppercase">{connectionState}</span>
         </div>
       </div>
 

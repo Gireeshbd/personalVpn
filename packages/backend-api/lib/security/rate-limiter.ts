@@ -22,13 +22,12 @@ export async function checkRateLimit(
 
   try {
     // Use RPC function for atomic rate limit check and increment
-    const { data, error } = await supabase
-      .rpc('check_and_increment_rate_limit', {
-        p_user_id: userId,
-        p_endpoint: endpoint,
-        p_max_requests: limit.requests,
-        p_window_ms: limit.window,
-      });
+    const { data, error } = await supabase.rpc('check_and_increment_rate_limit', {
+      p_user_id: userId,
+      p_endpoint: endpoint,
+      p_max_requests: limit.requests,
+      p_window_ms: limit.window,
+    });
 
     if (error) {
       console.error('Rate limit check error:', error);

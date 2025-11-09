@@ -12,6 +12,7 @@
 This document provides a comprehensive production-ready development plan for the Personal VPN Chrome Extension. It builds upon the initial project plan (README.md) and provides detailed technical specifications, implementation strategies, quality assurance processes, and operational procedures required for a production deployment.
 
 **Key Objectives:**
+
 - Transform the conceptual plan into production-ready code
 - Establish robust development, testing, and deployment workflows
 - Ensure security, scalability, and maintainability
@@ -209,6 +210,7 @@ User Action (Connect) → Extension Popup
 ### 2.1 Prerequisites
 
 **Required Software:**
+
 - Node.js 18+ LTS
 - npm or pnpm (recommended for monorepo)
 - Git
@@ -221,6 +223,7 @@ User Action (Connect) → Extension Popup
   - Chrome Extension Development
 
 **System Requirements:**
+
 - OS: Linux, macOS, or Windows with WSL2
 - RAM: 8GB minimum (16GB recommended)
 - Storage: 10GB free space
@@ -279,6 +282,7 @@ echo "  3. Read docs/CONTRIBUTING.md for development guidelines"
 ### 2.3 Environment Variables
 
 **Chrome Extension (.env.local):**
+
 ```env
 VITE_API_BASE_URL=https://api.personalvpn.dev
 VITE_API_TIMEOUT=10000
@@ -288,6 +292,7 @@ VITE_ANALYTICS_ENABLED=false
 ```
 
 **Backend API (.env.local):**
+
 ```env
 # Supabase
 SUPABASE_URL=https://xxxxx.supabase.co
@@ -316,44 +321,44 @@ NODE_ENV=development
 
 ### 3.1 Chrome Extension Stack
 
-| Category | Technology | Version | Justification |
-|----------|-----------|---------|---------------|
-| Framework | React | 18.x | Component reusability, modern hooks |
-| Build Tool | Vite | 5.x | Fast HMR, modern ES modules |
-| Language | TypeScript | 5.x | Type safety, better DX |
-| State Management | Zustand | 4.x | Lightweight, simple API |
-| HTTP Client | Axios | 1.x | Interceptors, request cancellation |
-| UI Components | Tailwind CSS | 3.x | Utility-first, small bundle |
-| Icons | Lucide React | 0.x | Modern, lightweight icons |
-| Testing | Jest + RTL | Latest | Standard testing solution |
-| E2E Testing | Puppeteer | Latest | Chrome automation |
+| Category         | Technology   | Version | Justification                       |
+| ---------------- | ------------ | ------- | ----------------------------------- |
+| Framework        | React        | 18.x    | Component reusability, modern hooks |
+| Build Tool       | Vite         | 5.x     | Fast HMR, modern ES modules         |
+| Language         | TypeScript   | 5.x     | Type safety, better DX              |
+| State Management | Zustand      | 4.x     | Lightweight, simple API             |
+| HTTP Client      | Axios        | 1.x     | Interceptors, request cancellation  |
+| UI Components    | Tailwind CSS | 3.x     | Utility-first, small bundle         |
+| Icons            | Lucide React | 0.x     | Modern, lightweight icons           |
+| Testing          | Jest + RTL   | Latest  | Standard testing solution           |
+| E2E Testing      | Puppeteer    | Latest  | Chrome automation                   |
 
 ### 3.2 Backend API Stack
 
-| Category | Technology | Version | Justification |
-|----------|-----------|---------|---------------|
-| Runtime | Node.js | 18 LTS | Serverless compatibility |
-| Platform | Vercel | Latest | Free tier, edge network |
-| Language | TypeScript | 5.x | Type safety |
-| Database | Supabase | Latest | Free tier, PostgreSQL |
-| ORM | Prisma | 5.x | Type-safe queries |
-| Validation | Zod | 3.x | Runtime type validation |
-| Auth | JWT | Latest | Stateless authentication |
-| API Framework | Vercel Serverless | Latest | Native Vercel integration |
-| Testing | Jest + Supertest | Latest | API testing |
+| Category      | Technology        | Version | Justification             |
+| ------------- | ----------------- | ------- | ------------------------- |
+| Runtime       | Node.js           | 18 LTS  | Serverless compatibility  |
+| Platform      | Vercel            | Latest  | Free tier, edge network   |
+| Language      | TypeScript        | 5.x     | Type safety               |
+| Database      | Supabase          | Latest  | Free tier, PostgreSQL     |
+| ORM           | Prisma            | 5.x     | Type-safe queries         |
+| Validation    | Zod               | 3.x     | Runtime type validation   |
+| Auth          | JWT               | Latest  | Stateless authentication  |
+| API Framework | Vercel Serverless | Latest  | Native Vercel integration |
+| Testing       | Jest + Supertest  | Latest  | API testing               |
 
 ### 3.3 Infrastructure Stack
 
-| Category | Technology | Version | Justification |
-|----------|-----------|---------|---------------|
-| VPN Protocol | WireGuard | Latest | Modern, fast, secure |
-| OS | Ubuntu | 22.04 LTS | Stability, support |
-| IaC | Terraform | 1.6+ | Infrastructure as code |
-| Config Mgmt | Ansible | 2.14+ | Server provisioning |
-| Monitoring | Netdata | Latest | Real-time metrics |
-| Uptime | Uptime Kuma | Latest | Self-hosted monitoring |
-| Logging | Loki | Latest | Log aggregation |
-| Firewall | UFW | Latest | Simple firewall |
+| Category     | Technology  | Version   | Justification          |
+| ------------ | ----------- | --------- | ---------------------- |
+| VPN Protocol | WireGuard   | Latest    | Modern, fast, secure   |
+| OS           | Ubuntu      | 22.04 LTS | Stability, support     |
+| IaC          | Terraform   | 1.6+      | Infrastructure as code |
+| Config Mgmt  | Ansible     | 2.14+     | Server provisioning    |
+| Monitoring   | Netdata     | Latest    | Real-time metrics      |
+| Uptime       | Uptime Kuma | Latest    | Self-hosted monitoring |
+| Logging      | Loki        | Latest    | Log aggregation        |
+| Firewall     | UFW         | Latest    | Simple firewall        |
 
 ---
 
@@ -384,14 +389,8 @@ NODE_ENV=development
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": [
-    "proxy",
-    "storage",
-    "alarms"
-  ],
-  "host_permissions": [
-    "https://api.personalvpn.dev/*"
-  ],
+  "permissions": ["proxy", "storage", "alarms"],
+  "host_permissions": ["https://api.personalvpn.dev/*"],
   "options_page": "options.html",
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
@@ -511,27 +510,20 @@ export class ProxyManager {
         singleProxy: {
           scheme: config.protocol, // 'http', 'https', 'socks5'
           host: config.host,
-          port: config.port
+          port: config.port,
         },
-        bypassList: [
-          'localhost',
-          '127.0.0.1',
-          '<local>'
-        ]
-      }
+        bypassList: ['localhost', '127.0.0.1', '<local>'],
+      },
     };
 
     return new Promise((resolve, reject) => {
-      chrome.proxy.settings.set(
-        { value: proxyConfig, scope: 'regular' },
-        () => {
-          if (chrome.runtime.lastError) {
-            reject(chrome.runtime.lastError);
-          } else {
-            resolve();
-          }
+      chrome.proxy.settings.set({ value: proxyConfig, scope: 'regular' }, () => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve();
         }
-      );
+      });
     });
   }
 
@@ -589,7 +581,7 @@ export class ConnectionManager {
       await this.proxyManager.setProxy({
         protocol: serverConfig.protocol,
         host: serverConfig.host,
-        port: serverConfig.port
+        port: serverConfig.port,
       });
 
       // Verify connection
@@ -601,7 +593,7 @@ export class ConnectionManager {
         await this.storage.setConnectionState({
           isConnected: true,
           serverId: serverId,
-          connectedAt: Date.now()
+          connectedAt: Date.now(),
         });
 
         // Track connection analytics
@@ -628,7 +620,7 @@ export class ConnectionManager {
       await this.storage.setConnectionState({
         isConnected: false,
         serverId: null,
-        connectedAt: null
+        connectedAt: null,
       });
 
       this.notifyStateChange();
@@ -649,7 +641,7 @@ export class ConnectionManager {
     return {
       state: this.connectionState,
       server: this.currentServer,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -678,7 +670,7 @@ export class ConnectionManager {
     chrome.runtime.sendMessage({
       type: 'CONNECTION_STATE_CHANGED',
       state: this.connectionState,
-      server: this.currentServer
+      server: this.currentServer,
     });
 
     // Update badge
@@ -690,7 +682,7 @@ export class ConnectionManager {
       disconnected: { text: '', color: '#808080' },
       connecting: { text: '...', color: '#FFA500' },
       connected: { text: '✓', color: '#00AA00' },
-      error: { text: '!', color: '#FF0000' }
+      error: { text: '!', color: '#FF0000' },
     };
 
     const config = badgeConfig[this.connectionState];
@@ -849,25 +841,22 @@ import { crx } from '@crxjs/vite-plugin';
 import manifest from './manifest.json';
 
 export default defineConfig({
-  plugins: [
-    react(),
-    crx({ manifest })
-  ],
+  plugins: [react(), crx({ manifest })],
   build: {
     rollupOptions: {
       input: {
         popup: 'popup.html',
-        options: 'options.html'
-      }
-    }
+        options: 'options.html',
+      },
+    },
   },
   server: {
     port: 5173,
     strictPort: true,
     hmr: {
-      port: 5173
-    }
-  }
+      port: 5173,
+    },
+  },
 });
 ```
 
@@ -984,7 +973,7 @@ import { generateJWT } from '../../lib/auth/jwt';
 import { v4 as uuidv4 } from 'uuid';
 
 const registerSchema = z.object({
-  deviceId: z.string().optional()
+  deviceId: z.string().optional(),
 });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -1035,14 +1024,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       data: {
         token,
         userId,
-        anonymousId
-      }
+        anonymousId,
+      },
     });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(400).json({
       success: false,
-      error: error.message
+      error: error.message,
     });
   }
 }
@@ -1069,7 +1058,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Get active servers with low load
     const { data: servers, error } = await supabase
       .from('vpn_servers')
-      .select('id, name, location, country_code, protocol, current_load, capacity, health_status')
+      .select(
+        'id, name, location, country_code, protocol, current_load, capacity, health_status'
+      )
       .eq('is_active', true)
       .eq('health_status', 'healthy')
       .order('current_load', { ascending: true });
@@ -1078,25 +1069,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Calculate load percentage and filter
     const availableServers = servers
-      .filter(server => (server.current_load / server.capacity) < 0.9)
-      .map(server => ({
+      .filter((server) => server.current_load / server.capacity < 0.9)
+      .map((server) => ({
         id: server.id,
         name: server.name,
         location: server.location,
         countryCode: server.country_code,
         protocol: server.protocol,
-        load: Math.round((server.current_load / server.capacity) * 100)
+        load: Math.round((server.current_load / server.capacity) * 100),
       }));
 
     res.status(200).json({
       success: true,
-      data: availableServers
+      data: availableServers,
     });
   } catch (error) {
     console.error('List servers error:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch servers'
+      error: 'Failed to fetch servers',
     });
   }
 }
@@ -1111,7 +1102,7 @@ import { supabase } from '../../lib/db/supabase';
 import { verifyAuth } from '../../lib/auth/middleware';
 
 const configSchema = z.object({
-  serverId: z.string().uuid()
+  serverId: z.string().uuid(),
 });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -1134,7 +1125,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (error || !server) {
       return res.status(404).json({
         success: false,
-        error: 'Server not found'
+        error: 'Server not found',
       });
     }
 
@@ -1142,7 +1133,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (server.current_load >= server.capacity) {
       return res.status(503).json({
         success: false,
-        error: 'Server at capacity'
+        error: 'Server at capacity',
       });
     }
 
@@ -1153,13 +1144,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .eq('id', serverId);
 
     // Create connection record
-    await supabase
-      .from('connections')
-      .insert({
-        user_id: user.userId,
-        server_id: serverId,
-        is_active: true
-      });
+    await supabase.from('connections').insert({
+      user_id: user.userId,
+      server_id: serverId,
+      is_active: true,
+    });
 
     res.status(200).json({
       success: true,
@@ -1168,14 +1157,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         name: server.name,
         host: server.host,
         port: server.port,
-        protocol: server.protocol
-      }
+        protocol: server.protocol,
+      },
     });
   } catch (error) {
     console.error('Get config error:', error);
     res.status(400).json({
       success: false,
-      error: error.message
+      error: error.message,
     });
   }
 }
@@ -1628,14 +1617,12 @@ export async function checkRateLimit(
 
   if (!rateLimitRecord) {
     // Create new rate limit record
-    await supabase
-      .from('rate_limits')
-      .insert({
-        user_id: userId,
-        endpoint,
-        request_count: 1,
-        window_start: now.toISOString()
-      });
+    await supabase.from('rate_limits').insert({
+      user_id: userId,
+      endpoint,
+      request_count: 1,
+      window_start: now.toISOString(),
+    });
     return true;
   }
 
@@ -1648,7 +1635,7 @@ export async function checkRateLimit(
       .from('rate_limits')
       .update({
         request_count: 1,
-        window_start: now.toISOString()
+        window_start: now.toISOString(),
       })
       .eq('id', rateLimitRecord.id);
     return true;
@@ -1662,7 +1649,7 @@ export async function checkRateLimit(
   await supabase
     .from('rate_limits')
     .update({
-      request_count: rateLimitRecord.request_count + 1
+      request_count: rateLimitRecord.request_count + 1,
     })
     .eq('id', rateLimitRecord.id);
 
@@ -1729,7 +1716,7 @@ describe('ConnectionManager', () => {
         id: serverId,
         protocol: 'socks5',
         host: '1.2.3.4',
-        port: 1080
+        port: 1080,
       };
 
       mockApiClient.getServerConfig.mockResolvedValue(serverConfig);
@@ -1742,12 +1729,12 @@ describe('ConnectionManager', () => {
       expect(mockProxyManager.setProxy).toHaveBeenCalledWith({
         protocol: 'socks5',
         host: '1.2.3.4',
-        port: 1080
+        port: 1080,
       });
       expect(mockStorage.setConnectionState).toHaveBeenCalledWith({
         isConnected: true,
         serverId,
-        connectedAt: expect.any(Number)
+        connectedAt: expect.any(Number),
       });
     });
 
@@ -1755,7 +1742,9 @@ describe('ConnectionManager', () => {
       const serverId = 'server-123';
       mockApiClient.getServerConfig.mockRejectedValue(new Error('Server not found'));
 
-      await expect(connectionManager.connect(serverId)).rejects.toThrow('Server not found');
+      await expect(connectionManager.connect(serverId)).rejects.toThrow(
+        'Server not found'
+      );
     });
   });
 
@@ -1769,7 +1758,7 @@ describe('ConnectionManager', () => {
       expect(mockStorage.setConnectionState).toHaveBeenCalledWith({
         isConnected: false,
         serverId: null,
-        connectedAt: null
+        connectedAt: null,
       });
     });
   });
@@ -1802,22 +1791,20 @@ describe('Servers API', () => {
     authToken = generateJWT({ userId: testUserId, anonymousId: 'test-user-123' });
 
     // Insert test servers
-    await supabase
-      .from('vpn_servers')
-      .insert([
-        {
-          name: 'Test Server US',
-          location: 'New York',
-          country_code: 'US',
-          host: '1.2.3.4',
-          port: 1080,
-          protocol: 'socks5',
-          capacity: 1000,
-          current_load: 100,
-          is_active: true,
-          health_status: 'healthy'
-        }
-      ]);
+    await supabase.from('vpn_servers').insert([
+      {
+        name: 'Test Server US',
+        location: 'New York',
+        country_code: 'US',
+        host: '1.2.3.4',
+        port: 1080,
+        protocol: 'socks5',
+        capacity: 1000,
+        current_load: 100,
+        is_active: true,
+        health_status: 'healthy',
+      },
+    ]);
   });
 
   afterAll(async () => {
@@ -1839,8 +1826,7 @@ describe('Servers API', () => {
     });
 
     it('should reject request without auth token', async () => {
-      const response = await request(app)
-        .get('/api/servers/list');
+      const response = await request(app).get('/api/servers/list');
 
       expect(response.status).toBe(401);
     });
@@ -1869,14 +1855,12 @@ describe('Connection Flow E2E', () => {
       args: [
         `--disable-extensions-except=${extensionPath}`,
         `--load-extension=${extensionPath}`,
-      ]
+      ],
     });
 
     // Get extension ID
     const targets = await browser.targets();
-    const extensionTarget = targets.find(
-      target => target.type() === 'service_worker'
-    );
+    const extensionTarget = targets.find((target) => target.type() === 'service_worker');
     const serviceWorkerUrl = extensionTarget?.url() || '';
     extensionId = serviceWorkerUrl.split('/')[2];
   });
@@ -1893,7 +1877,7 @@ describe('Connection Flow E2E', () => {
     await page.waitForSelector('.connection-status');
 
     // Check initial state
-    const initialStatus = await page.$eval('.connection-status', el => el.textContent);
+    const initialStatus = await page.$eval('.connection-status', (el) => el.textContent);
     expect(initialStatus).toContain('DISCONNECTED');
 
     // Select server
@@ -1904,11 +1888,14 @@ describe('Connection Flow E2E', () => {
 
     // Wait for connection
     await page.waitForSelector('.connection-status:contains("CONNECTED")', {
-      timeout: 10000
+      timeout: 10000,
     });
 
     // Verify connected state
-    const connectedStatus = await page.$eval('.connection-status', el => el.textContent);
+    const connectedStatus = await page.$eval(
+      '.connection-status',
+      (el) => el.textContent
+    );
     expect(connectedStatus).toContain('CONNECTED');
 
     // Disconnect
@@ -2104,6 +2091,7 @@ jobs:
 ### 10.1 Monitoring Stack
 
 **Components:**
+
 1. **Netdata** - Real-time server metrics
 2. **Uptime Kuma** - Uptime monitoring
 3. **Sentry** - Error tracking
@@ -2120,10 +2108,7 @@ import { supabase } from '../lib/db/supabase';
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     // Check database connection
-    const { data, error } = await supabase
-      .from('vpn_servers')
-      .select('count')
-      .limit(1);
+    const { data, error } = await supabase.from('vpn_servers').select('count').limit(1);
 
     if (error) throw error;
 
@@ -2132,14 +2117,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       timestamp: new Date().toISOString(),
       checks: {
         database: 'ok',
-        api: 'ok'
-      }
+        api: 'ok',
+      },
     });
   } catch (error) {
     res.status(500).json({
       status: 'unhealthy',
       timestamp: new Date().toISOString(),
-      error: error.message
+      error: error.message,
     });
   }
 }
@@ -2205,15 +2190,16 @@ done
 
 ### 11.1 Deployment Environments
 
-| Environment | Purpose | Branch | Auto-Deploy |
-|-------------|---------|--------|-------------|
-| Development | Local development | feature/* | No |
-| Staging | Testing & QA | develop | Yes |
-| Production | Live users | main | Yes (with approval) |
+| Environment | Purpose           | Branch     | Auto-Deploy         |
+| ----------- | ----------------- | ---------- | ------------------- |
+| Development | Local development | feature/\* | No                  |
+| Staging     | Testing & QA      | develop    | Yes                 |
+| Production  | Live users        | main       | Yes (with approval) |
 
 ### 11.2 Deployment Checklist
 
 **Pre-Deployment:**
+
 - [ ] All tests passing
 - [ ] Code review approved
 - [ ] Security scan completed
@@ -2223,6 +2209,7 @@ done
 - [ ] Rollback plan prepared
 
 **Deployment:**
+
 - [ ] Deploy backend API first
 - [ ] Run database migrations
 - [ ] Verify API health endpoints
@@ -2231,6 +2218,7 @@ done
 - [ ] Monitor error rates
 
 **Post-Deployment:**
+
 - [ ] Verify all services healthy
 - [ ] Check error tracking dashboard
 - [ ] Monitor user connections
@@ -2266,6 +2254,7 @@ echo "✅ Rollback complete"
 ### 12.1 Required Documentation
 
 **Technical Documentation:**
+
 - [ ] API documentation (OpenAPI/Swagger)
 - [ ] Architecture diagrams
 - [ ] Database schema documentation
@@ -2276,6 +2265,7 @@ echo "✅ Rollback complete"
 - [ ] Runbooks for common issues
 
 **User Documentation:**
+
 - [ ] User guide (how to use extension)
 - [ ] FAQ
 - [ ] Troubleshooting guide
@@ -2283,6 +2273,7 @@ echo "✅ Rollback complete"
 - [ ] Terms of service
 
 **Legal Documentation:**
+
 - [ ] Privacy policy
 - [ ] Terms of service
 - [ ] Acceptable use policy
@@ -2398,6 +2389,7 @@ echo "✅ Rollback complete"
 ### 14.1 Incident Response
 
 **High User Load:**
+
 ```
 1. Check current server loads
 2. If >80%, enable rate limiting
@@ -2407,6 +2399,7 @@ echo "✅ Rollback complete"
 ```
 
 **Server Down:**
+
 ```
 1. Check server health monitoring
 2. SSH into server and check logs
@@ -2418,6 +2411,7 @@ echo "✅ Rollback complete"
 ```
 
 **API Errors:**
+
 ```
 1. Check Sentry dashboard
 2. Review error logs
@@ -2430,12 +2424,14 @@ echo "✅ Rollback complete"
 ### 14.2 Regular Maintenance
 
 **Weekly:**
+
 - [ ] Review server metrics
 - [ ] Check error logs
 - [ ] Review user feedback
 - [ ] Update dependencies (patch)
 
 **Monthly:**
+
 - [ ] Security updates
 - [ ] Review costs
 - [ ] Backup verification
@@ -2443,6 +2439,7 @@ echo "✅ Rollback complete"
 - [ ] Capacity planning
 
 **Quarterly:**
+
 - [ ] Security audit
 - [ ] Infrastructure review
 - [ ] Documentation update
@@ -2455,11 +2452,13 @@ echo "✅ Rollback complete"
 ### Sprint 1: Foundation (Week 1-2)
 
 **Goals:**
+
 - Set up development environment
 - Initialize project structure
 - Configure CI/CD pipelines
 
 **Tasks:**
+
 - [ ] Create monorepo structure
 - [ ] Setup GitHub repository
 - [ ] Configure development environment
@@ -2470,6 +2469,7 @@ echo "✅ Rollback complete"
 - [ ] Create initial database schema
 
 **Deliverables:**
+
 - Working development environment
 - CI/CD pipelines functional
 - Basic project structure
@@ -2477,11 +2477,13 @@ echo "✅ Rollback complete"
 ### Sprint 2: Backend API (Week 3-4)
 
 **Goals:**
+
 - Implement core backend functionality
 - Database operations working
 - API endpoints functional
 
 **Tasks:**
+
 - [ ] Implement authentication API
 - [ ] Implement servers API
 - [ ] Implement rate limiting
@@ -2490,6 +2492,7 @@ echo "✅ Rollback complete"
 - [ ] Deploy to Vercel staging
 
 **Deliverables:**
+
 - Functional backend API
 - API documentation
 - Tests passing
@@ -2497,11 +2500,13 @@ echo "✅ Rollback complete"
 ### Sprint 3: Chrome Extension Core (Week 5-6)
 
 **Goals:**
+
 - Core extension functionality
 - Connection management working
 - Basic UI complete
 
 **Tasks:**
+
 - [ ] Implement service worker
 - [ ] Implement proxy manager
 - [ ] Implement connection manager
@@ -2510,6 +2515,7 @@ echo "✅ Rollback complete"
 - [ ] Write extension tests
 
 **Deliverables:**
+
 - Working Chrome extension
 - Can connect/disconnect
 - Server selection working
@@ -2517,11 +2523,13 @@ echo "✅ Rollback complete"
 ### Sprint 4: Infrastructure (Week 7-8)
 
 **Goals:**
+
 - VPN servers deployed
 - Monitoring set up
 - Infrastructure as code
 
 **Tasks:**
+
 - [ ] Setup Oracle Cloud server
 - [ ] Install WireGuard
 - [ ] Setup additional VPS servers
@@ -2531,6 +2539,7 @@ echo "✅ Rollback complete"
 - [ ] Document server setup
 
 **Deliverables:**
+
 - 3 VPN servers operational
 - Monitoring dashboard live
 - Infrastructure documented
@@ -2538,11 +2547,13 @@ echo "✅ Rollback complete"
 ### Sprint 5: Testing & Security (Week 9-10)
 
 **Goals:**
+
 - Comprehensive testing complete
 - Security hardened
 - Performance optimized
 
 **Tasks:**
+
 - [ ] Complete unit tests
 - [ ] Complete integration tests
 - [ ] Complete E2E tests
@@ -2552,6 +2563,7 @@ echo "✅ Rollback complete"
 - [ ] Fix identified issues
 
 **Deliverables:**
+
 - Test coverage >80%
 - Security audit passed
 - Performance benchmarks met
@@ -2559,11 +2571,13 @@ echo "✅ Rollback complete"
 ### Sprint 6: Polish & Documentation (Week 11-12)
 
 **Goals:**
+
 - UI/UX polished
 - Documentation complete
 - Production ready
 
 **Tasks:**
+
 - [ ] UI/UX improvements
 - [ ] Write user documentation
 - [ ] Write developer documentation
@@ -2573,6 +2587,7 @@ echo "✅ Rollback complete"
 - [ ] Final security review
 
 **Deliverables:**
+
 - Polished user interface
 - Complete documentation
 - Legal documents ready
@@ -2580,11 +2595,13 @@ echo "✅ Rollback complete"
 ### Sprint 7: Launch (Week 13-14)
 
 **Goals:**
+
 - Deploy to production
 - Submit to Chrome Web Store
 - Monitor launch
 
 **Tasks:**
+
 - [ ] Deploy backend to production
 - [ ] Deploy VPN infrastructure
 - [ ] Build production extension
@@ -2594,6 +2611,7 @@ echo "✅ Rollback complete"
 - [ ] Monitor for issues
 
 **Deliverables:**
+
 - Live in Chrome Web Store
 - Production systems operational
 - Launch successful
@@ -2601,11 +2619,13 @@ echo "✅ Rollback complete"
 ### Sprint 8: Post-Launch (Week 15-16)
 
 **Goals:**
+
 - Stabilize production
 - Gather user feedback
 - Fix critical issues
 
 **Tasks:**
+
 - [ ] Monitor error rates
 - [ ] Review user feedback
 - [ ] Fix critical bugs
@@ -2614,6 +2634,7 @@ echo "✅ Rollback complete"
 - [ ] Plan next features
 
 **Deliverables:**
+
 - Stable production system
 - User feedback incorporated
 - Future roadmap
@@ -2624,35 +2645,35 @@ echo "✅ Rollback complete"
 
 ### 16.1 Technical Metrics
 
-| Metric | Target | Critical Threshold |
-|--------|--------|-------------------|
-| API Response Time | <200ms p95 | >500ms |
-| Extension Load Time | <1s | >3s |
-| Server Uptime | 99.5% | <98% |
-| Error Rate | <0.1% | >1% |
-| Connection Success Rate | >95% | <90% |
-| Test Coverage | >80% | <70% |
+| Metric                  | Target     | Critical Threshold |
+| ----------------------- | ---------- | ------------------ |
+| API Response Time       | <200ms p95 | >500ms             |
+| Extension Load Time     | <1s        | >3s                |
+| Server Uptime           | 99.5%      | <98%               |
+| Error Rate              | <0.1%      | >1%                |
+| Connection Success Rate | >95%       | <90%               |
+| Test Coverage           | >80%       | <70%               |
 
 ### 16.2 Business Metrics
 
-| Metric | Target (3 months) | Measurement |
-|--------|------------------|-------------|
-| Active Users | 500-1000 | DAU/MAU |
-| User Retention | >70% | 30-day retention |
-| Cost per User | <$0.10 | Monthly cost / MAU |
-| Chrome Store Rating | >4.0 stars | User reviews |
-| Support Tickets | <5% of users | Ticket volume |
+| Metric              | Target (3 months) | Measurement        |
+| ------------------- | ----------------- | ------------------ |
+| Active Users        | 500-1000          | DAU/MAU            |
+| User Retention      | >70%              | 30-day retention   |
+| Cost per User       | <$0.10            | Monthly cost / MAU |
+| Chrome Store Rating | >4.0 stars        | User reviews       |
+| Support Tickets     | <5% of users      | Ticket volume      |
 
 ### 16.3 Operational Metrics
 
-| Metric | Target | Alert Threshold |
-|--------|--------|----------------|
-| Monthly Cost | <$80 | >$90 |
-| Bandwidth per Server | <5TB | >4.5TB |
-| CPU Usage | <60% avg | >80% |
-| Memory Usage | <70% avg | >85% |
-| Disk Usage | <70% | >80% |
-| Incident Response Time | <30min | >1hr |
+| Metric                 | Target   | Alert Threshold |
+| ---------------------- | -------- | --------------- |
+| Monthly Cost           | <$80     | >$90            |
+| Bandwidth per Server   | <5TB     | >4.5TB          |
+| CPU Usage              | <60% avg | >80%            |
+| Memory Usage           | <70% avg | >85%            |
+| Disk Usage             | <70%     | >80%            |
+| Incident Response Time | <30min   | >1hr            |
 
 ---
 
@@ -2660,29 +2681,30 @@ echo "✅ Rollback complete"
 
 ### 17.1 Technical Risks
 
-| Risk | Impact | Likelihood | Mitigation | Contingency |
-|------|--------|------------|------------|-------------|
-| Chrome Web Store rejection | High | Low | Follow guidelines strictly | Iterate based on feedback |
-| Server overload | High | Medium | Rate limiting, capacity monitoring | Add servers quickly |
-| Security breach | Critical | Low | Security audits, best practices | Incident response plan |
-| API rate limiting issues | Medium | Medium | Proper rate limit design | Fallback mechanisms |
-| Extension bugs | Medium | Medium | Comprehensive testing | Quick rollback capability |
+| Risk                       | Impact   | Likelihood | Mitigation                         | Contingency               |
+| -------------------------- | -------- | ---------- | ---------------------------------- | ------------------------- |
+| Chrome Web Store rejection | High     | Low        | Follow guidelines strictly         | Iterate based on feedback |
+| Server overload            | High     | Medium     | Rate limiting, capacity monitoring | Add servers quickly       |
+| Security breach            | Critical | Low        | Security audits, best practices    | Incident response plan    |
+| API rate limiting issues   | Medium   | Medium     | Proper rate limit design           | Fallback mechanisms       |
+| Extension bugs             | Medium   | Medium     | Comprehensive testing              | Quick rollback capability |
 
 ### 17.2 Business Risks
 
-| Risk | Impact | Likelihood | Mitigation | Contingency |
-|------|--------|------------|------------|-------------|
-| Cost overrun | High | Medium | Budget alerts, monitoring | Reduce capacity or add revenue |
-| User abuse | Medium | High | Rate limiting, fair use policy | Ban system, premium tier |
-| Poor adoption | Medium | Medium | Good UX, marketing | Improve based on feedback |
-| Legal issues | High | Low | Legal review, clear ToS | Consult lawyer |
-| Provider ToS violation | High | Low | Review all provider policies | Alternative providers ready |
+| Risk                   | Impact | Likelihood | Mitigation                     | Contingency                    |
+| ---------------------- | ------ | ---------- | ------------------------------ | ------------------------------ |
+| Cost overrun           | High   | Medium     | Budget alerts, monitoring      | Reduce capacity or add revenue |
+| User abuse             | Medium | High       | Rate limiting, fair use policy | Ban system, premium tier       |
+| Poor adoption          | Medium | Medium     | Good UX, marketing             | Improve based on feedback      |
+| Legal issues           | High   | Low        | Legal review, clear ToS        | Consult lawyer                 |
+| Provider ToS violation | High   | Low        | Review all provider policies   | Alternative providers ready    |
 
 ---
 
 ## 18. Future Enhancements (Post-Launch)
 
 ### Phase 2 Features (Months 3-6)
+
 - [ ] Firefox extension port
 - [ ] Split tunneling
 - [ ] Kill switch feature
@@ -2691,6 +2713,7 @@ echo "✅ Rollback complete"
 - [ ] Custom DNS settings
 
 ### Phase 3 Features (Months 6-12)
+
 - [ ] Mobile app (Android)
 - [ ] Desktop applications
 - [ ] Advanced analytics dashboard
@@ -2699,6 +2722,7 @@ echo "✅ Rollback complete"
 - [ ] API for third-party integrations
 
 ### Sustainability Features
+
 - [ ] Optional premium tier
 - [ ] Donation system
 - [ ] Referral program
@@ -2711,18 +2735,21 @@ echo "✅ Rollback complete"
 ### 19.1 Implementation Priority
 
 **Immediate (Sprint 1-2):**
+
 1. Setup development environment
 2. Initialize project structure
 3. Setup CI/CD
 4. Start backend API development
 
 **Short-term (Sprint 3-5):**
+
 1. Complete backend API
 2. Develop Chrome extension
 3. Deploy infrastructure
 4. Comprehensive testing
 
 **Medium-term (Sprint 6-8):**
+
 1. Polish and documentation
 2. Launch preparation
 3. Production deployment
@@ -2741,6 +2768,7 @@ echo "✅ Rollback complete"
 ### 19.3 Getting Started
 
 **First Actions:**
+
 ```bash
 # 1. Setup development environment
 git clone <repository>

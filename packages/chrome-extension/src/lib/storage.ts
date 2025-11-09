@@ -58,11 +58,13 @@ export class StorageManager {
 
   async getConnectionState(): Promise<ConnectionStateStorage> {
     const state = await this.get<ConnectionStateStorage>(STORAGE_KEYS.CONNECTION_STATE);
-    return state || {
-      isConnected: false,
-      serverId: null,
-      connectedAt: null,
-    };
+    return (
+      state || {
+        isConnected: false,
+        serverId: null,
+        connectedAt: null,
+      }
+    );
   }
 
   async setConnectionState(state: ConnectionStateStorage): Promise<void> {

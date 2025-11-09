@@ -21,14 +21,8 @@
     "service_worker": "src/background/index.ts",
     "type": "module"
   },
-  "permissions": [
-    "proxy",
-    "storage",
-    "alarms"
-  ],
-  "host_permissions": [
-    "https://api.personalvpn.dev/*"
-  ],
+  "permissions": ["proxy", "storage", "alarms"],
+  "host_permissions": ["https://api.personalvpn.dev/*"],
   "options_page": "options.html",
   "content_security_policy": {
     "extension_pages": "script-src 'self'; style-src 'self'; connect-src https://api.personalvpn.dev; object-src 'self'"

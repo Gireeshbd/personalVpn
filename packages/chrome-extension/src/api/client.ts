@@ -231,9 +231,7 @@ export class ApiClient {
    */
   async ping(): Promise<ApiResponse> {
     try {
-      const response = await this.client.get<HealthCheckResponse>(
-        API_ENDPOINTS.HEALTH
-      );
+      const response = await this.client.get<HealthCheckResponse>(API_ENDPOINTS.HEALTH);
       return {
         success: response.data.status === 'healthy',
         data: response.data,

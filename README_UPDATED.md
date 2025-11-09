@@ -77,6 +77,7 @@ personalVpn/
 ## 🛠️ Tech Stack
 
 ### Frontend (Chrome Extension)
+
 - **React 18** - UI framework
 - **TypeScript 5** - Type safety
 - **Vite 5** - Build tool with HMR
@@ -85,12 +86,14 @@ personalVpn/
 - **Lucide React** - Icons
 
 ### Backend (API)
+
 - **Vercel** - Serverless platform
 - **Supabase** - PostgreSQL database
 - **JWT** - Authentication
 - **Zod** - Input validation
 
 ### Infrastructure
+
 - **WireGuard** - VPN protocol
 - **Terraform** - Infrastructure as code
 - **Ansible** - Configuration management
@@ -145,15 +148,15 @@ Perfect for testing UI, connection flows, and state management!
 
 **Estimated Monthly Cost:** $20-60
 
-| Service | Provider | Cost | Notes |
-|---------|----------|------|-------|
-| VPN Server (US) | Oracle Cloud Free Tier | $0 | 2 AMD EPYC cores, 12GB RAM |
-| VPN Server (EU) | Contabo VPS S | $5-10 | 4 cores, 8GB RAM |
-| VPN Server (Asia) | Hetzner CX21 | $5-10 | 2 cores, 4GB RAM |
-| Backend API | Vercel Free Tier | $0 | Serverless functions |
-| Database | Supabase Free Tier | $0 | PostgreSQL |
-| Domain + SSL | Cloudflare | $1/month | Amortized annual cost |
-| Bandwidth | Pay-as-you-go | $10-40 | Variable based on usage |
+| Service           | Provider               | Cost     | Notes                      |
+| ----------------- | ---------------------- | -------- | -------------------------- |
+| VPN Server (US)   | Oracle Cloud Free Tier | $0       | 2 AMD EPYC cores, 12GB RAM |
+| VPN Server (EU)   | Contabo VPS S          | $5-10    | 4 cores, 8GB RAM           |
+| VPN Server (Asia) | Hetzner CX21           | $5-10    | 2 cores, 4GB RAM           |
+| Backend API       | Vercel Free Tier       | $0       | Serverless functions       |
+| Database          | Supabase Free Tier     | $0       | PostgreSQL                 |
+| Domain + SSL      | Cloudflare             | $1/month | Amortized annual cost      |
+| Bandwidth         | Pay-as-you-go          | $10-40   | Variable based on usage    |
 
 **Total: $20-60/month** ✅ (Well under $100 target!)
 
@@ -215,6 +218,7 @@ See **[TESTING.md](./TESTING.md)** for comprehensive testing checklist.
 ## 🚧 Roadmap
 
 ### ✅ Phase 1: Foundation (Complete)
+
 - [x] Monorepo structure
 - [x] Chrome extension with UI
 - [x] Backend API endpoints
@@ -224,6 +228,7 @@ See **[TESTING.md](./TESTING.md)** for comprehensive testing checklist.
 - [x] Documentation
 
 ### 🔄 Phase 2: Testing & Security (In Progress)
+
 - [x] Error boundaries
 - [x] Environment validation
 - [x] Mock mode
@@ -233,6 +238,7 @@ See **[TESTING.md](./TESTING.md)** for comprehensive testing checklist.
 - [ ] Performance testing
 
 ### ⏳ Phase 3: Infrastructure (Planned)
+
 - [ ] Deploy backend to Vercel
 - [ ] Setup Supabase database
 - [ ] Deploy VPN servers (Oracle Cloud + budget VPS)
@@ -240,6 +246,7 @@ See **[TESTING.md](./TESTING.md)** for comprehensive testing checklist.
 - [ ] Setup monitoring (Netdata, Uptime Kuma)
 
 ### ⏳ Phase 4: Launch (Planned)
+
 - [ ] Replace placeholder icons with branded icons
 - [ ] Create Chrome Web Store listing
 - [ ] Privacy policy page
@@ -248,6 +255,7 @@ See **[TESTING.md](./TESTING.md)** for comprehensive testing checklist.
 - [ ] Public beta testing
 
 ### ⏳ Phase 5: Post-Launch (Future)
+
 - [ ] Firefox extension port
 - [ ] Split tunneling feature
 - [ ] Kill switch implementation
@@ -322,6 +330,7 @@ MIT License - see [LICENSE](./LICENSE) file for details.
 ## 🎯 Next Steps
 
 ### For Testing:
+
 1. Read **[TESTING.md](./TESTING.md)**
 2. Build the extension (`pnpm build`)
 3. Load it in Chrome
@@ -329,6 +338,7 @@ MIT License - see [LICENSE](./LICENSE) file for details.
 5. Report any issues
 
 ### For Production Deployment:
+
 1. Read **[PRODUCTION_PLAN.md](./PRODUCTION_PLAN.md)**
 2. Setup Supabase database
 3. Deploy backend to Vercel
@@ -338,6 +348,7 @@ MIT License - see [LICENSE](./LICENSE) file for details.
 7. Submit to Chrome Web Store
 
 ### For Development:
+
 1. Read **[docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)**
 2. Setup development environment
 3. Pick an issue or feature

@@ -54,14 +54,12 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
             <div className="flex items-center gap-3 mb-4">
               <AlertCircle className="w-8 h-8 text-red-600" />
-              <h1 className="text-2xl font-bold text-gray-900">
-                Something went wrong
-              </h1>
+              <h1 className="text-2xl font-bold text-gray-900">Something went wrong</h1>
             </div>
 
             <p className="text-gray-600 mb-4">
-              The extension encountered an unexpected error. This has been logged
-              for investigation.
+              The extension encountered an unexpected error. This has been logged for
+              investigation.
             </p>
 
             {this.state.error && (

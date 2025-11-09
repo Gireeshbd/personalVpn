@@ -2,10 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { supabase } from '../../lib/db/supabase';
 import { verifyAuth } from '../../lib/auth/middleware';
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');

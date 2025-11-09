@@ -19,6 +19,7 @@ Authorization: Bearer <token>
 Register or login a user (anonymous).
 
 **Request Body:**
+
 ```json
 {
   "deviceId": "optional-device-id"
@@ -26,6 +27,7 @@ Register or login a user (anonymous).
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -44,9 +46,11 @@ Register or login a user (anonymous).
 Get list of available VPN servers.
 
 **Headers:**
+
 - `Authorization: Bearer <token>` (required)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -68,9 +72,11 @@ Get list of available VPN servers.
 Get configuration for a specific server.
 
 **Headers:**
+
 - `Authorization: Bearer <token>` (required)
 
 **Request Body:**
+
 ```json
 {
   "serverId": "uuid"
@@ -78,6 +84,7 @@ Get configuration for a specific server.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -98,9 +105,11 @@ Get configuration for a specific server.
 Track usage analytics.
 
 **Headers:**
+
 - `Authorization: Bearer <token>` (required)
 
 **Request Body:**
+
 ```json
 {
   "event": "connection",
@@ -110,6 +119,7 @@ Track usage analytics.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -124,6 +134,7 @@ Track usage analytics.
 Check API health status.
 
 **Response:**
+
 ```json
 {
   "status": "healthy",

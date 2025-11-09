@@ -26,16 +26,19 @@ This guide covers deploying the Personal VPN application to production.
 ### 2. Deploy to Vercel
 
 1. Install Vercel CLI:
+
    ```bash
    npm install -g vercel
    ```
 
 2. Login to Vercel:
+
    ```bash
    vercel login
    ```
 
 3. Deploy:
+
    ```bash
    cd packages/backend-api
    vercel --prod
@@ -79,6 +82,7 @@ See `PRODUCTION_PLAN.md` section 6 for detailed infrastructure setup.
 
 1. Setup Oracle Cloud free tier VPS
 2. Install WireGuard manually:
+
    ```bash
    # SSH into your VPS
    sudo apt update && sudo apt install -y wireguard
@@ -95,6 +99,7 @@ See `PRODUCTION_PLAN.md` section 6 for detailed infrastructure setup.
    ```
 
 3. Configure monitoring:
+
    ```bash
    # Install Netdata
    bash <(curl -Ss https://my-netdata.io/kickstart.sh)
@@ -132,6 +137,7 @@ vercel rollback
 ## Support
 
 For deployment issues, check:
+
 1. Environment variables are set correctly
 2. Database migrations have run
 3. API endpoints are accessible

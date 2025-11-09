@@ -18,17 +18,14 @@ export class ProxyManager {
     };
 
     return new Promise((resolve, reject) => {
-      chrome.proxy.settings.set(
-        { value: proxyConfig, scope: 'regular' },
-        () => {
-          if (chrome.runtime.lastError) {
-            reject(new Error(chrome.runtime.lastError.message));
-          } else {
-            console.log('Proxy set:', config);
-            resolve();
-          }
+      chrome.proxy.settings.set({ value: proxyConfig, scope: 'regular' }, () => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+        } else {
+          console.log('Proxy set:', config);
+          resolve();
         }
-      );
+      });
     });
   }
 

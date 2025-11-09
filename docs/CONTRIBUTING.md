@@ -5,12 +5,14 @@ Thank you for your interest in contributing to Personal VPN! This document provi
 ## Development Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/Gireeshbd/personalVpn.git
    cd personalVpn
    ```
 
 2. **Run the setup script**
+
    ```bash
    ./scripts/setup-dev.sh
    ```
@@ -41,6 +43,7 @@ personalVpn/
 ## Development Workflow
 
 1. **Create a feature branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -51,6 +54,7 @@ personalVpn/
    - Add tests for new features
 
 3. **Run tests and linting**
+
    ```bash
    pnpm test
    pnpm lint
@@ -58,6 +62,7 @@ personalVpn/
    ```
 
 4. **Commit your changes**
+
    ```bash
    git add .
    git commit -m "feat: your feature description"

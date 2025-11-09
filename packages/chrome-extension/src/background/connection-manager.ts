@@ -1,7 +1,4 @@
-import type {
-  ConnectionState,
-  ServerConfig,
-} from '@shared/types';
+import type { ConnectionState, ServerConfig } from '@shared/types';
 import { BADGE_COLORS, BADGE_TEXT } from '@shared/constants';
 import { ProxyManager } from './proxy-manager';
 import { ApiClient } from '../api/client';
