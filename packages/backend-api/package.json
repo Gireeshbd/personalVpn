@@ -1,0 +1,40 @@
+{
+  "name": "@personal-vpn/backend-api",
+  "version": "1.0.0",
+  "description": "Backend API for Personal VPN",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "tsc",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint api lib --ext ts",
+    "lint:fix": "eslint api lib --ext ts --fix",
+    "type-check": "tsc --noEmit",
+    "db:migrate": "node --loader ts-node/esm supabase/migrate.ts",
+    "clean": "rm -rf .vercel node_modules"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.4",
+    "@vercel/node": "^3.0.11",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.10",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.10.0",
+    "@types/supertest": "^2.0.16",
+    "@types/uuid": "^9.0.7",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.2"
+  }
+}

@@ -1,0 +1,73 @@
+name: Chrome Extension CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'packages/chrome-extension/**'
+      - 'packages/shared/**'
+      - '.github/workflows/extension-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'packages/chrome-extension/**'
+      - 'packages/shared/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: |
+          cd packages/chrome-extension
+          pnpm lint
+
+      - name: Type check
+        run: |
+          cd packages/chrome-extension
+          pnpm type-check
+
+      - name: Run tests
+        run: |
+          cd packages/chrome-extension
+          pnpm test
+
+      - name: Build extension
+        run: |
+          cd packages/chrome-extension
+          pnpm build
+        env:
+          VITE_API_BASE_URL: ${{ secrets.API_BASE_URL || 'https://api.personalvpn.dev' }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-build
+          path: packages/chrome-extension/dist/
+          retention-days: 7
+
+  # TODO: Add deployment job for Chrome Web Store
+  # deploy:
+  #   needs: test
+  #   if: github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Deploy to Chrome Web Store
+  #       # Add deployment steps here
